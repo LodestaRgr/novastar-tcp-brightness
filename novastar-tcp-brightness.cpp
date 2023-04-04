@@ -53,7 +53,14 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	else {
-		brightness = stoi(argv[1]);
+
+		try {
+			brightness = stoi(argv[1]);
+		}
+		catch (exception& err) {
+			brightness = -1;
+		}
+
 		if (brightness < 0 or brightness > 100) {
 			cout << "brightness must be in 0..100" << endl;
 			return 0;
