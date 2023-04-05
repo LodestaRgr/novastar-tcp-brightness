@@ -174,14 +174,14 @@ int main(int argc, char** argv)
 			//hex1 = Преобразование % (процента) в hex (0..255)
 			int brightness_hex1 = round(255 * (float)brightness / 100);
 
-			//hex2 = Второе значение (85 + hex1) и если hex1 >= 256 тогда (85 + hex1 - 256)
-			int brightness_hex2 = (85 + brightness_hex1) < 256 ? (85 + brightness_hex1) : (85 + brightness_hex1 - 256);		
+			//hex3 и hex2 = (85 + hex1) на два байта 20 и 19
+			unsigned short brightness_hex2 = 85 + brightness_hex1;
+			int brightness_hex3 = (brightness_hex2 / 256);
 
-			// подмена 18 и 19 байта в шаблоне команды яркости
+			// подмена байтов в шаблоне команды яркости
 			brightXX[18] = brightness_hex1;
-			brightXX[19] = brightness_hex2;
-
-			//cout << brightness_hex1 << " : " << brightness_hex2 << endl;
+			brightXX[19] = brightXX[19] + (brightness_hex2 - ((unsigned short)brightness_hex3) * 256);
+			brightXX[20] = brightXX[20] + brightness_hex3;
 
 			// Отправка комманды подключения к видеопроцессору
 			packet_size = send(ClientSock, connect, sizeof(connect), 0);
